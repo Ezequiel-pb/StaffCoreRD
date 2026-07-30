@@ -1,0 +1,127 @@
+﻿@model IEnumerable<StaffCoreRD.Models.Staff>
+@{
+    ViewData["Title"] = "Gestión de Personal";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark"><i class="fa-solid fa-users me-2"></i>Nómina de Personal</h2>
+        <p class="text-muted mb-0">Gestión activa de colaboradores de StaffCore RD</p>
+    </div>
+
+    @* Botón "+ Nuevo" visible SOLO para Admin y RRHH *@
+    @if (User.IsInRole("Administrador") || User.IsInRole("RRHH"))
+    {
+        <a asp-action="Create" class="btn btn-primary-custom text-white shadow-sm">
+            <i class="fa-solid fa-plus me-2"></i>Nuevo Empleado
+        </a>
+    }
+</div>
+
+<!-- Buscador en Tiempo Real  -->
+<form asp-action="Index" method="get" class="mb-4">
+    <div class="input-group shadow-sm">
+        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Buscar empleado por nombre o cargo..." />
+        <button class="btn btn-secondary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+    </div>
+</form>
+
+<div class="card card-custom p-3">
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center my-4" role="alert">
+            <i class="fa-solid fa-info-circle fa-2x mb-2 d-block"></i>
+            <strong>No se encontraron colaboradores registrados en la base de datos.</strong>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle table-custom">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                        <th>@Html.DisplayNameFor(model => model.Cargo)</th>
+                        <th>@Html.DisplayNameFor(model => model.Departamento)</th>
+                        <th class="text-end">@Html.DisplayNameFor(model => model.Salario)</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                <div class="d-flex align-items-center">
+                                    <!-- Avatar generado con iniciales -->
+                                    <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(item.Nombre)&background=0d6efd&color=fff&bold=true&rounded=true"
+                                         alt="Avatar"
+                                         class="rounded-circle me-3 shadow-sm"
+                                         width="40"
+                                         height="40" />
+                                    <div>
+                                        <span class="fw-bold d-block text-dark mb-0">@item.Nombre</span>
+                                        <small class="text-muted" style="font-size: 0.78rem;">
+                                            <i class="fa-regular fa-id-card me-1"></i>@item.Cedula
+                                        </small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-light text-dark border">@item.Cargo</span></td>
+                            <td><span class="badge bg-primary">@item.Departamento</span></td>
+                            <td class="text-end fw-bold text-success">
+                                RD$ @item.Salario.ToString("N2")
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm rounded-pill" title="Detalles">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+
+                                @* Permisos condicionales para Editar *@
+                                @if (User.IsInRole("Administrador") || User.IsInRole("RRHH"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm rounded-pill ms-1" title="Editar">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                }
+
+                                @* Permisos condicionales para Eliminar *@
+                                @if (User.IsInRole("Administrador"))
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm rounded-pill ms-1" title="Eliminar">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="table-dark fw-bold">
+                        <td colspan="3" class="text-end fs-5">Total de Nómina:</td>
+                        <td class="text-end fs-5 text-warning">
+                            RD$ @Model.Sum(x => x.Salario).ToString("N2")
+                        </td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Se ejecuta cada vez que el usuario escribe en el campo de búsqueda
+            $("input[name='searchString']").on("keyup", function () {
+                var valor = $(this).val().toLowerCase();
+
+                // Filtra las filas de la tabla según el texto ingresado
+                $("table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(valor) > -1);
+                });
+            });
+        });
+    </script>
+}

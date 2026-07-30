@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StaffCore RD</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark navbar-custom py-3">
+            <div class="container">
+                <a class="navbar-brand fw-bold fs-4" asp-controller="Staff" asp-action="Index">
+                    <i class="fa-solid fa-users-gear me-2"></i>StaffCore RD
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-flex-grow-1 nav me-auto">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-semibold" asp-controller="Staff" asp-action="Index">
+                                    <i class="fa-solid fa-list me-1"></i> Nómina Personal
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-semibold" asp-controller="Staff" asp-action="Resumen">
+                                    <i class="fa-solid fa-chart-pie me-1"></i> Resumen
+                                </a>
+                            </li>
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-warning fw-bold" asp-controller="Account" asp-action="ManageRoles">
+                                        <i class="fa-solid fa-users-gear me-1"></i> Gestionar Roles
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <!-- Menú dinámico de Sesión con Badge de Rol Clicable -->
+                    <ul class="navbar-nav d-flex align-items-center gap-2">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <span class="badge bg-light text-primary fs-6 px-3 py-2 rounded-pill shadow-sm">
+                                    <i class="fa-solid fa-circle-user me-1"></i> @User.Identity.Name
+                                </span>
+                            </li>
+                            <li class="nav-item me-2">
+                                @if (User.IsInRole("Administrador"))
+                                {
+                                    <button type="button" class="btn badge bg-danger fs-6 px-3 py-2 rounded-pill shadow-sm border-0" data-bs-toggle="modal" data-bs-target="#modalInfoRol">
+                                        <i class="fa-solid fa-user-shield me-1"></i> Administrador
+                                    </button>
+                                }
+                                else if (User.IsInRole("RRHH"))
+                                {
+                                    <button type="button" class="btn badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill shadow-sm border-0" data-bs-toggle="modal" data-bs-target="#modalInfoRol">
+                                        <i class="fa-solid fa-user-tie me-1"></i> RRHH
+                                    </button>
+                                }
+                                else if (User.IsInRole("Viewer"))
+                                {
+                                    <button type="button" class="btn badge bg-secondary fs-6 px-3 py-2 rounded-pill shadow-sm border-0" data-bs-toggle="modal" data-bs-target="#modalInfoRol">
+                                        <i class="fa-solid fa-eye me-1"></i> Viewer
+                                    </button>
+                                }
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                                        <i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar sesión
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item me-1">
+                                <a class="btn btn-outline-light rounded-pill px-3" asp-controller="Account" asp-action="Login">
+                                    <i class="fa-solid fa-key me-1"></i> Iniciar Sesión
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-light text-primary fw-bold rounded-pill px-3" asp-controller="Account" asp-action="Register">
+                                    <i class="fa-solid fa-user-plus me-1"></i> Registrarse
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container my-4 flex-grow-1">
+        <!-- Bloque TempData para mensajes de Éxito -->
+        @if (TempData["Exito"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm border-0 mb-4" role="alert">
+                <i class="fa-solid fa-circle-check me-2 fs-5"></i> @TempData["Exito"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Modal Informativo de Roles -->
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="modal fade" id="modalInfoRol" tabindex="-1" aria-labelledby="modalInfoRolLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow-lg border-0 rounded-4">
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <div class="modal-header bg-danger text-white rounded-top-4">
+                            <h5 class="modal-title" id="modalInfoRolLabel">
+                                <i class="fa-solid fa-shield-halved me-2"></i>Perfil: Administrador
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <p class="mb-3">Cuentas con el nivel máximo de acceso en <strong>StaffCore RD</strong>.</p>
+                            <h6 class="fw-bold text-dark mb-2">Permisos habilitados:</h6>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item"><i class="fa-solid fa-check text-success me-2"></i> Crear, editar y eliminar registros de personal.</li>
+                                <li class="list-group-item"><i class="fa-solid fa-check text-success me-2"></i> Cambiar roles de usuarios desde el Módulo Administrativo.</li>
+                                <li class="list-group-item"><i class="fa-solid fa-check text-success me-2"></i> Visualizar métricas salariales de la empresa.</li>
+                            </ul>
+                            <div class="alert alert-danger border-0 small mb-0">
+                                <i class="fa-solid fa-triangle-exclamation me-1"></i> Nivel de acceso: <strong>Control Total (Root)</strong>
+                            </div>
+                        </div>
+                    }
+                    else if (User.IsInRole("RRHH"))
+                    {
+                        <div class="modal-header bg-warning text-dark rounded-top-4">
+                            <h5 class="modal-title" id="modalInfoRolLabel">
+                                <i class="fa-solid fa-id-card me-2"></i>Perfil: Recursos Humanos
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <p class="mb-3">Rol orientado a la gestión operativa de colaboradores en <strong>StaffCore RD</strong>.</p>
+                            <h6 class="fw-bold text-dark mb-2">Permisos habilitados:</h6>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item"><i class="fa-solid fa-check text-success me-2"></i> Dar de alta nuevos empleados.</li>
+                                <li class="list-group-item"><i class="fa-solid fa-check text-success me-2"></i> Modificar datos técnicos y salariales del personal.</li>
+                                <li class="list-group-item"><i class="fa-solid fa-xmark text-danger me-2"></i> <em>Sin permisos para eliminar registros ni gestionar roles.</em></li>
+                            </ul>
+                            <div class="alert alert-warning border-0 small mb-0">
+                                <i class="fa-solid fa-user-gear me-1"></i> Nivel de acceso: <strong>Operativo / Edición</strong>
+                            </div>
+                        </div>
+                    }
+                    else if (User.IsInRole("Viewer"))
+                    {
+                        <div class="modal-header bg-secondary text-white rounded-top-4">
+                            <h5 class="modal-title" id="modalInfoRolLabel">
+                                <i class="fa-solid fa-eye me-2"></i>Perfil: Observador (Viewer)
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <p class="mb-3">Acceso limitado en modo consulta dentro de <strong>StaffCore RD</strong>.</p>
+                            <h6 class="fw-bold text-dark mb-2">Permisos habilitados:</h6>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item"><i class="fa-solid fa-check text-success me-2"></i> Búsqueda y filtrado de personal en tiempo real.</li>
+                                <li class="list-group-item"><i class="fa-solid fa-check text-success me-2"></i> Consultar la ficha detallada de cada colaborador.</li>
+                                <li class="list-group-item"><i class="fa-solid fa-xmark text-danger me-2"></i> <em>Sin permisos de creación, edición o borrado.</em></li>
+                            </ul>
+                            <div class="alert alert-secondary border-0 small mb-0">
+                                <i class="fa-solid fa-lock me-1"></i> Nivel de acceso: <strong>Solo Lectura</strong>
+                            </div>
+                        </div>
+                    }
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-light rounded-3 fw-bold" data-bs-dismiss="modal">Entendido</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <footer class="footer mt-auto py-3 bg-white border-top text-center text-muted">
+        <div class="container">
+            &copy; 2026 - <strong>StaffCore RD</strong> | Universidad Central del Este (UCE)
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

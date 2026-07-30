@@ -1,0 +1,74 @@
+﻿@model StaffCoreRD.Models.Staff
+@{
+    ViewData["Title"] = "Registrar Empleado";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card card-custom p-4">
+            <h3 class="fw-bold mb-3"><i class="fa-solid fa-user-plus me-2 text-primary"></i>Registrar Empleado</h3>
+            <hr />
+
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Nombre" class="form-label fw-semibold"></label>
+                        <input asp-for="Nombre" class="form-control" placeholder="Ej. Pedro Martínez" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Cedula" class="form-label fw-semibold"></label>
+                        <input asp-for="Cedula" class="form-control" placeholder="001-0000000-0" />
+                        <span asp-validation-for="Cedula" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Cargo" class="form-label fw-semibold"></label>
+                        <input asp-for="Cargo" class="form-control" placeholder="Ej. Analista de Sistemas" />
+                        <span asp-validation-for="Cargo" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Departamento" class="form-label fw-semibold"></label>
+                        <select asp-for="Departamento" class="form-select">
+                            <option value="">-- Seleccione Departamento --</option>
+                            <option value="Tecnología">Tecnología</option>
+                            <option value="Recursos Humanos">Recursos Humanos</option>
+                            <option value="Finanzas">Finanzas</option>
+                            <option value="Operaciones">Operaciones</option>
+                        </select>
+                        <span asp-validation-for="Departamento" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Salario" class="form-label fw-semibold"></label>
+                        <input asp-for="Salario" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Salario" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaIngreso" class="form-label fw-semibold"></label>
+                        <input asp-for="FechaIngreso" class="form-control" type="date" />
+                        <span asp-validation-for="FechaIngreso" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <a asp-action="Index" class="btn btn-secondary rounded-3">Cancelar</a>
+                    <button type="submit" class="btn btn-primary-custom text-white shadow-sm">Guardar Empleado</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

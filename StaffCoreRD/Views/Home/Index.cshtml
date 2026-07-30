@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Bienvenido a StaffCore RD";
+}
+
+<!-- Hero Section con estilo empresarial y fondo contrastado -->
+<div class="p-5 mb-5 text-white rounded-4 shadow-lg" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+    <div class="container-fluid py-3">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge bg-light text-primary fw-bold px-3 py-2 rounded-pill mb-3">
+                    <i class="fa-solid fa-shield-halved me-1"></i> Plataforma Corporativa v1.0
+                </span>
+                <h1 class="display-4 fw-bold mb-3 text-white">Sistema de Gestión de Personal</h1>
+                <p class="col-md-10 fs-5 text-white-50 mb-4">
+                    Bienvenido a <strong class="text-white">StaffCore RD</strong>, la solución tecnológica diseñada para la administración integral de nómina, control de accesos por roles y gestión de personal de empresas en la República Dominicana.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Staff" asp-action="Index" class="btn btn-warning btn-lg fw-bold px-4 py-3 rounded-3 shadow">
+                            <i class="fa-solid fa-table-list me-2"></i> Ir a la Nómina
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-light text-primary btn-lg fw-bold px-4 py-3 rounded-3 shadow">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i> Iniciar Sesión
+                        </a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg fw-bold px-4 py-3 rounded-3">
+                            <i class="fa-solid fa-user-plus me-2"></i> Registrar Cuenta
+                        </a>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block text-center">
+                <i class="fa-solid fa-people-roof text-white opacity-25" style="font-size: 10rem;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sección de Tarjetas Informativas -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 card-custom p-4 border-0 shadow-sm text-center">
+            <div class="card-body">
+                <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                    <i class="fa-solid fa-user-shield fa-2x"></i>
+                </div>
+                <h4 class="fw-bold mb-2 text-dark">Control por Roles</h4>
+                <p class="text-muted">
+                    Acceso seguro mediante ASP.NET Identity con permisos diferenciados para Administradores, RRHH y Visores.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 card-custom p-4 border-0 shadow-sm text-center">
+            <div class="card-body">
+                <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                    <i class="fa-solid fa-sack-dollar fa-2x"></i>
+                </div>
+                <h4 class="fw-bold mb-2 text-dark">Cálculo de Nómina</h4>
+                <p class="text-muted">
+                    Resumen automático de masa salarial por departamento con validaciones ajustadas al salario mínimo dominicano.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 card-custom p-4 border-0 shadow-sm text-center">
+            <div class="card-body">
+                <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                    <i class="fa-solid fa-sitemap fa-2x"></i>
+                </div>
+                <h4 class="fw-bold mb-2 text-dark">Departamentos</h4>
+                <p class="text-muted">
+                    Organización centralizada para las áreas de Tecnología, Recursos Humanos, Finanzas y Operaciones.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Banner Institucional UCE -->
+<div class="card bg-white border-0 rounded-4 p-4 mb-4 text-center text-muted shadow-sm">
+    <div class="card-body">
+        <h6 class="fw-bold text-uppercase tracking-wider mb-1 text-primary">
+            <i class="fa-solid fa-graduation-cap me-2"></i> Proyecto Académico UCE
+        </h6>
+        <p class="mb-0 small text-secondary">Asignatura: Tecnologías de Internet I — Universidad Central del Este</p>
+    </div>
+</div>
