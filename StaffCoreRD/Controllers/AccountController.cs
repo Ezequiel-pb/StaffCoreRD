@@ -17,7 +17,7 @@ namespace StaffCoreRD.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpGet]
+        [HttpGet]//hola
         public IActionResult Register()
         {
             return View();
