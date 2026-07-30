@@ -40,11 +40,12 @@ using (var scope = app.Services.CreateScope())
     try
     {
         await DbInitializer.SeedRolesAsync(services);
+        await DbInitializer.SeedAdminUserAsync(services);
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Error al inicializar los roles.");
+        logger.LogError(ex, "Error al inicializar los roles y el usuario administrador.");
     }
 }
 
