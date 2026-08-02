@@ -9,13 +9,16 @@ DATOS DEL ESTUDIANTE
 Nombre completo : Ezequiel Peguero Bautista
 Matricula        : 2023-0738
 
+
 CREDENCIALES DEL USUARIO ADMINISTRADOR DE PRUEBA
 --------------------------------------------------
 Correo electronico : admin@staffcore.rd
 Contrasena          : Admin123
 
-(Este fue el primer usuario registrado en el sistema, por lo que
-el sistema le asigno automaticamente el rol de "Administrador".)
+(Este usuario se crea automaticamente con rol de Administrador
+la primera vez que se ejecuta la aplicacion, mediante el metodo
+DbInitializer.SeedAdminUserAsync. No es necesario registrarlo
+manualmente.)
 
 DESCRIPCION DEL PROYECTO
 --------------------------
@@ -42,18 +45,20 @@ TECNOLOGIAS UTILIZADAS
 - Bootstrap 5 + Font Awesome
 
 COMO EJECUTAR EL PROYECTO
----------------------------- 
-1. Abrir la solucion en Visual Studio.
+----------------------------
+1. Clonar el repositorio y abrir la solucion en Visual Studio.
 2. Verificar el connection string "StaffCore" en appsettings.json
    (apunta a (localdb)\mssqllocaldb, base de datos StaffCoreDB).
-3. Ejecutar en la Consola del Administrador de Paquetes:
-       dotnet ef database update
-4. Correr el proyecto con dotnet run o F5 en Visual Studio.
-5. Al iniciar, el sistema crea automaticamente los roles:
-   Administrador, RRHH y Viewer.
-6. Registrar el primer usuario: quedara asignado automaticamente
-   como Administrador. Los siguientes usuarios se registran con
-   rol Viewer por defecto (el Administrador puede cambiarles el rol
-   desde "Gestionar Roles").
+3. Ejecutar en la Consola del Administrador de Paquetes (Package
+   Manager Console):
+       Update-Database
+4. Correr el proyecto con F5 en Visual Studio (o dotnet run).
+5. Al iniciar por primera vez, el sistema crea automaticamente:
+   - Los roles: Administrador, RRHH y Viewer.
+   - El usuario Administrador de prueba (ver credenciales arriba).
+6. Puede iniciar sesion directamente con esas credenciales, o
+   registrar nuevos usuarios desde la pantalla de Registro (se
+   les asignara el rol Viewer por defecto; el Administrador puede
+   cambiarles el rol desde "Gestionar Roles").
 
 ========================================================
